@@ -19,14 +19,13 @@ pip install -r requirements.txt
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/your-django-api-project.git
-   cd your-django-api-project
+   git clone https://github.com/SqueshSvyt/WebSite.git  
    ```
 
-2. Apply database migrations:
+2. Go to the project dir:
 
    ```bash
-   python manage.py migrate
+   cd .\WebSite
    ```
 
 3. Run the development server:
