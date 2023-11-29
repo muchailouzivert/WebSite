@@ -12,10 +12,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
-import sqlalchemy
-from sqlalchemy import create_engine
-from urllib.parse import quote
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -76,14 +72,21 @@ WSGI_APPLICATION = 'WebSite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-username = 'root'
-password = 'King220lorde'
-hostname = 'localhost:3306'
-database_name = 'my_db'
-encoded_password = quote(password)
 
-engine = create_engine(f"mysql+mysqlconnector://{username}:{encoded_password}@{hostname}/{database_name}")
-connection = engine.connect()
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'my_db',
+        'USER': 'root',
+        'PASSWORD': 'King220lorde',
+        'HOST': 'localhost',
+        'PORT': '3306',  # MySQL default port
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
+    }
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
