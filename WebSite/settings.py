@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
-import mongoengine
+import sqlalchemy
+from sqlalchemy import create_engine
+from urllib.parse import quote
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -74,22 +76,14 @@ WSGI_APPLICATION = 'WebSite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+username = 'root'
+password = 'King220lorde'
+hostname = 'localhost:3306'
+database_name = 'my_db'
+encoded_password = quote(password)
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.dummy',
-    },
-}
-
-MONGO_DB_NAME = os.environ.get('MONGO_DB_NAME')
-MONGO_PORT = os.environ.get('MONGO_PORT')
-MONGO_HOST = os.environ.get('MONGO_HOST')
-
-mongoengine.connect(
-    db=MONGO_DB_NAME,
-    host=f'mongodb://{MONGO_HOST}:{MONGO_PORT}/{MONGO_DB_NAME}',
-)
-
+engine = create_engine(f"mysql+mysqlconnector://{username}:{encoded_password}@{hostname}/{database_name}")
+connection = engine.connect()
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
