@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Login</h2>
+  {% load socialaccount %}
+  <a href="{% provider_login_url 'facebook' %}">Login with Facebook</a><br>
+  <a href="{% provider_login_url 'google' %}">Login with Google</a><br><br>
+
+  <form method="post" action="{% url 'account_login' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+  </form>
+
+  <p>Don't have an account? <a href="{% url 'account_signup' %}">Sign up</a></p>
+{% endblock %}
