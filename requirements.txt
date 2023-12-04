@@ -1,1 +1,9 @@
 Django~=4.2.7
+mysqlclient
+Pillow
+djangorestframework
+drf-spectacular
+drf_yasg
+django-crispy-forms
+django-bootstrap4
+crispy_bootstrap4
