@@ -7,3 +7,4 @@ drf_yasg
 django-crispy-forms
 django-bootstrap4
 crispy_bootstrap4
+djangorestframework-simplejwt

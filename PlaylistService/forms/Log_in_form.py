@@ -12,9 +12,10 @@ class NewUserForm(forms.Form):
 
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
 
         # Add your custom validation logic here
-        if len(password1) < 8:
+        if len(password1) < 8 or len(password2) < 8:
             raise ValidationError("Password must be at least 8 characters long.")
 
         return password1
@@ -40,6 +41,8 @@ class NewUserForm(forms.Form):
         return cleaned_data
 
 
-class CustomAuthenticationForm(AuthenticationForm):
+class CustomLoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput())
     password = forms.CharField(widget=forms.PasswordInput())
+
+

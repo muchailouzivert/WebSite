@@ -1,18 +1,18 @@
 # views.py
+from django.contrib.auth.decorators import login_required
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework.exceptions import NotFound
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from PlaylistService.models import Playlist
 from PlaylistService.serializers import PlaylistSerializer
 
-
-class GetPublicPlaylists(APIView):
-    def get(self, request, *args, **kwargs):
-        public_playlists = Playlist.objects.filter(is_public=True)
-        serializer = PlaylistSerializer(public_playlists, many=True)
-        return Response(serializer.data)
+serializer_class = PlaylistSerializer
 
 
 @api_view(['GET'])
@@ -23,9 +23,20 @@ def get_all_user_playlist(request, variant):
     return Response(serializer.data)
 
 
+class GetPublicPlaylists(APIView):
+    serializer_class = PlaylistSerializer
+
+    def get(self, request, *args, **kwargs):
+        public_playlists = Playlist.objects.filter(is_public=True)
+        serializer = PlaylistSerializer(public_playlists, many=True)
+        return Response(serializer.data)
+
+
 class PlaylistViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Playlist.objects.all()
     serializer_class = PlaylistSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def list(self, request, *args, **kwargs):
         playlists = Playlist.objects.all()
@@ -46,10 +57,10 @@ class PlaylistViewSet(viewsets.ReadOnlyModelViewSet):
 
     def update(self, request, pk=None, *args, **kwargs):
         playlist = self.get_object(pk)
-        serializer = PlaylistSerializer(playlist, data=request.data)
+        serializer = PlaylistSerializer(playlist, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None, *args, **kwargs):
@@ -62,4 +73,3 @@ class PlaylistViewSet(viewsets.ReadOnlyModelViewSet):
             return Playlist.objects.get(pk=pk)
         except Playlist.DoesNotExist:
             raise NotFound(detail="Playlist not found", code=status.HTTP_404_NOT_FOUND)
-
