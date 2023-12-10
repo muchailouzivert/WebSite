@@ -28,7 +28,17 @@ pip install -r requirements.txt
    cd .\WebSite
    ```
 
-3. Run the development server:
+3. Run migration using command:
+
+    ```bash
+   python manage.py makemigrations
+   ```
+   
+    ```bash
+   python manage.py migrate
+   ```
+
+4. Run the development server:
 
    ```bash
    python manage.py runserver
@@ -40,13 +50,11 @@ The server will be running at http://127.0.0.1:8000/.
 
 ### Hello World API
 
-- **Endpoint:** `api/v1/hello-world-{variant}/`
-- **Method:** GET
-- **Parameters:**
-  - `{variant}`: The variant number.
-- **Response:**
-  - Status Code: 200
-  - Content: JSON with a greeting message.
+You can download Api documentation by:
+
+```bash
+curl http://127.0.0.1:8000/schema/
+```
 
 ## Testing the API
 
