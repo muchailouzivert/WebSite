@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import UserProfile, Playlist, Song, Comment
+from .models import Playlist, Song, Comment
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -32,16 +32,9 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = '__all__'
-
-    def validate(self, data):
-        user = authenticate(**data)
-        if user and user.is_active:
-            return user
-        raise serializers.ValidationError("Incorrect Credentials")
+class AddSongSerializer(serializers.Serializer):
+    playlist_id = serializers.IntegerField()
+    song_id = serializers.IntegerField()
 
 
 class CommentSerializer(serializers.ModelSerializer):

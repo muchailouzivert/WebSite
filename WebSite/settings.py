@@ -188,3 +188,7 @@ SPECTACULAR_SETTINGS = {
         'operationsSorter': 'alpha',
     },
 }
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]

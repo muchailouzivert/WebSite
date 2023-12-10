@@ -9,6 +9,7 @@ from PlaylistService.models import Song
 from PlaylistService.serializers import SongSerializer, get_playlist_by_id
 from rest_framework import status
 
+
 class SongViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Song.objects.all()
     serializer_class = SongSerializer
@@ -28,11 +29,7 @@ class SongViewSet(viewsets.ReadOnlyModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = SongSerializer(data=request.data)
         if serializer.is_valid():
-            playlist = serializer.validated_data.get('playlist')
-            if playlist.owner != request.user:
-                return Response({'success': False, 'errors': 'Unauthorized Playlist!'},
-                                status=status.HTTP_401_UNAUTHORIZED)
-            serializer.save()
+            serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
