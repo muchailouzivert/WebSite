@@ -186,7 +186,7 @@ SPECTACULAR_SETTINGS = {
         'filter': True,
         'tagsSorter': 'alpha',
         'operationsSorter': 'alpha',
-    },
+       },
 }
 
 AUTHENTICATION_BACKENDS = [

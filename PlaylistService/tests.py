@@ -13,6 +13,8 @@ class PlaylistAPITestCase(APITestCase):
         self.public_playlist = Playlist.objects.create(title='Public Playlist', is_public=True, owner=self.user)
         self.private_playlist = Playlist.objects.create(title='Private Playlist', owner=self.user)
 
+        self.client.force_authenticate(user=self.user)
+
     def test_get_public_playlists(self):
         url = reverse('GetPublicPL')
         response = self.client.get(url)
@@ -62,6 +64,8 @@ class PlaylistViewSetTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.playlist = Playlist.objects.create(title='Test Playlist', owner=self.user)
+
+        self.client.force_authenticate(user=self.user)
 
     def test_list_playlists(self):
         url = reverse('playlist-list')
@@ -119,16 +123,16 @@ class SongViewSetTest(APITestCase):
     def setUp(self):
         self.song_url = reverse('songs-list')
         self.user = User.objects.create_user(username='testuser', password='testpassword')
-        self.playlist = Playlist.objects.create(title='Test Playlist', owner=self.user)
-        self.song = Song.objects.create(id=1, title='title', artist="Kame", playlist=self.playlist)
+        self.song = Song.objects.create(id=1, title='title', artist="Kame", user=self.user)
+
+        self.client.force_authenticate(user=self.user)
 
     def test_list_songs(self):
         response = self.client.get(self.song_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_retrieve_song(self):
-        song_id = 1
-        song_url = reverse('songs-detail', args=[song_id])
+        song_url = reverse('songs-detail', args=[1])
         response = self.client.get(song_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -136,14 +140,13 @@ class SongViewSetTest(APITestCase):
         data = {
             'title': 'New Song',
             'artist': 'New Artist',
-            'playlist': self.playlist.id
+            'user': self.user.id
         }
         response = self.client.post(self.song_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_update_song(self):
-        song_id = 1
-        song_url = reverse('songs-detail', args=[song_id])
+        song_url = reverse('songs-detail', args=[1])
         data = {
             'title': 'Updated Song Title',
             'artist': 'New Artist'
@@ -152,8 +155,7 @@ class SongViewSetTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete_song(self):
-        song_id = 1
-        song_url = reverse('songs-detail', args=[song_id])
+        song_url = reverse('songs-detail', args=[1])
         response = self.client.delete(song_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -161,11 +163,11 @@ class SongViewSetTest(APITestCase):
 class CommentViewSetTestCase(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpassword')
-        self.playlist = Playlist.objects.create(title='Test Playlist', owner=self.user)
+        self.song = Song.objects.create(title='Test Playlist', artist="Artist", user=self.user)
         self.comment = Comment.objects.create(
             user=self.user,
             text='Test comment',
-            playlist=self.playlist
+            song=self.song
         )
 
         self.client.force_authenticate(user=self.user)
@@ -189,7 +191,7 @@ class CommentViewSetTestCase(APITestCase):
         data = {
             'user': self.user.id,
             'text': 'New comment',
-            'playlist': self.playlist.id,
+            'song': self.song.id,
         }
         response = self.client.post(url, data)
 

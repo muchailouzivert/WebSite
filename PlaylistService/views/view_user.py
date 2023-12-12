@@ -1,6 +1,7 @@
 # playlists/views.py
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib import messages
+from django.contrib.auth import login, authenticate, logout
 from rest_framework import serializers, status
 from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -9,6 +10,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from PlaylistService.forms.Log_in_form import NewUserForm, CustomLoginForm
 from PlaylistService.serializers import UserRegistrationSerializer, UserLoginSerializer
+
+
+def logout_request(request):
+    logout(request)
+    messages.info(request, "You have successfully logged out.")
+    return redirect("/")
 
 
 class RegisterView(CreateAPIView):
@@ -49,10 +56,8 @@ class LoginView(CreateAPIView):
 
             if user is not None:
                 login(request, user)
-
                 token = RefreshToken.for_user(user)
                 access_token = str(token.access_token)
-
 
                 return Response({'success': True, 'message': f"You are now logged in as {username}",
                                  'token': access_token})

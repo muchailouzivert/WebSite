@@ -6,4 +6,3 @@ admin.site.register(Playlist)
 admin.site.register(Song)
 admin.site.register(Comment)
 
-
