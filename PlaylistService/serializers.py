@@ -28,8 +28,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
+    first_name = serializers.CharField()
+    email = serializers.CharField()
+
 
 
 class AddSongSerializer(serializers.Serializer):

@@ -19,7 +19,7 @@ class HomePageView(ListView):
     authentication_classes = [JWTAuthentication]
 
     model = Playlist
-    template_name = 'home.html'
+    template_name = ''
     context_object_name = 'playlist'
 
 

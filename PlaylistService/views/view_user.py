@@ -53,9 +53,20 @@ class LoginView(CreateAPIView):
                 token = RefreshToken.for_user(user)
                 access_token = str(token.access_token)
 
+                user_data = {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                    'first_name': user.first_name,
+                    # Add more fields as needed
+                }
 
-                return Response({'success': True, 'message': f"You are now logged in as {username}",
-                                 'token': access_token})
+                return Response({'success': True,
+                                 'message': f"You are now logged in as {username}",
+                                 'token': access_token,
+                                 'user': user_data
+                }, status=status.HTTP_200_OK)
+
             else:
                 return Response({'success': False, 'message': "Invalid username or password"},
                                 status=status.HTTP_401_UNAUTHORIZED)
