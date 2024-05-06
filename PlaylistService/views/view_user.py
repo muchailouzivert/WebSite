@@ -58,6 +58,7 @@ class LoginView(CreateAPIView):
                     'username': user.username,
                     'email': user.email,
                     'first_name': user.first_name,
+                    'superuser': user.is_superuser
                     # Add more fields as needed
                 }
 
@@ -90,3 +91,5 @@ class UserLogoutAPIView(GenericAPIView):
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+

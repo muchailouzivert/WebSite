@@ -5,6 +5,7 @@ from .views.view_comment import CommentViewSet
 from .views.view_pages import hello_world, HomePageView
 from .views.view_song import SongViewSet
 from .views.view_user import RegisterView, LoginView
+from .views.user_view_crud import UserViewSet
 from .views.views_playlist import (
     PlaylistViewSet,
     get_all_user_playlist,
@@ -18,6 +19,7 @@ router.register(r'playlist', PlaylistViewSet, basename='playlist')
 router.register(r'songs/control', AddSongViewSet, basename="addSong")
 router.register(r'songs', SongViewSet, basename='songs')
 router.register(r'comments', CommentViewSet, basename='comment')
+router.register(r'users', UserViewSet)
 
 urlpatterns = [
     path('api/v1/hello-world-<int:variant>/', hello_world, name='hello_world'),
